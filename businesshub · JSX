@@ -1,1 +1,1002 @@
 
+import { useState } from "react";
+import {
+  LayoutDashboard, Building2, Wrench, DollarSign, Star, HelpCircle,
+  Share2, Eye, LogOut, Plus, Trash2, ChevronDown, ChevronUp,
+  Menu, X, Check, Phone, Mail, MapPin, Send, MessageCircle,
+  Zap, ArrowRight, Copy, CheckCircle, TrendingUp, Users, BarChart2,
+  Globe, Instagram, Twitter, Facebook, Edit2, RefreshCw, ExternalLink
+} from "lucide-react";
+
+/* ─────────────────────── DEFAULT DATA ─────────────────────── */
+const DEFAULT = {
+  name: "Buike Tech",
+  tagline: "Your Business, Online in Minutes",
+  description:
+    "We build fast, modern & affordable digital solutions for Nigerian businesses. From stunning websites to social media strategy — we help you grow online.",
+  logoText: "BT",
+  whatsapp: "09168144059",
+  email: "hello@buiketech.com",
+  phone: "09168144059",
+  address: "Port Harcourt, Rivers State, Nigeria",
+  tiktok: "@buiketech7",
+  instagram: "@buiketech7",
+  twitter: "",
+  facebook: "",
+  services: [
+    { id: 1, title: "Web Design", desc: "Beautiful, fast & responsive websites that turn visitors into customers.", icon: "🌐" },
+    { id: 2, title: "Social Media Management", desc: "Grow your brand and audience with expert strategy across all platforms.", icon: "📱" },
+    { id: 3, title: "Logo & Brand Design", desc: "Professional brand identity that makes your business unforgettable.", icon: "✨" },
+    { id: 4, title: "Digital Marketing", desc: "SEO, ads & content that drives real traffic and real results.", icon: "🚀" },
+  ],
+  pricing: [
+    { id: 1, name: "Starter", price: "25,000", cur: "₦", period: "/mo", hot: false, features: ["1-Page Website", "Mobile Responsive", "Basic SEO", "Email Support", "Free Domain (.com.ng)"] },
+    { id: 2, name: "Business", price: "75,000", cur: "₦", period: "/mo", hot: true, features: ["5-Page Website", "Mobile Responsive", "Advanced SEO", "WhatsApp Integration", "Social Media Setup", "Priority Support"] },
+    { id: 3, name: "Enterprise", price: "150,000", cur: "₦", period: "/mo", hot: false, features: ["Custom Website", "E-Commerce Ready", "Full Digital Strategy", "Monthly Reports", "Dedicated Manager", "24/7 Support"] },
+  ],
+  testimonials: [
+    { id: 1, name: "Chidi Okafor", role: "CEO, TechVentures Lagos", text: "Buike Tech built our website in record time. Our online sales grew by 300% in 3 months!", av: "CO" },
+    { id: 2, name: "Amara Johnson", role: "Founder, Style Boutique Abuja", text: "Very professional and affordable. I recommend them to every business owner in Nigeria.", av: "AJ" },
+    { id: 3, name: "Emeka Nwosu", role: "MD, FoodCo Port Harcourt", text: "Best digital agency I've worked with. They truly understand the Nigerian market.", av: "EN" },
+  ],
+  faqs: [
+    { id: 1, q: "How long does it take to build a website?", a: "Most websites are completed within 3–7 business days. Rush delivery is available for urgent projects." },
+    { id: 2, q: "Do you offer payment in installments?", a: "Yes! We offer flexible payment plans — 50% upfront and 50% on delivery." },
+    { id: 3, q: "Will my website work on mobile phones?", a: "Absolutely! All our websites are fully mobile responsive and tested on every device." },
+    { id: 4, q: "Can I update my website content myself?", a: "Yes, we provide easy-to-use CMS access so you can update text, images, and more anytime." },
+  ],
+  published: false,
+};
+
+/* ─────────────────────── UTILS ─────────────────────── */
+const waLink = (num) => `https://wa.me/234${num.replace(/^0/, "")}`;
+const uid = () => Date.now();
+
+function Input({ label, value, onChange, placeholder, type = "text" }) {
+  return (
+    <div>
+      {label && <label className="block text-sm font-semibold text-slate-700 mb-1.5">{label}</label>}
+      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
+        className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-white" />
+    </div>
+  );
+}
+function Textarea({ label, value, onChange, placeholder, rows = 3 }) {
+  return (
+    <div>
+      {label && <label className="block text-sm font-semibold text-slate-700 mb-1.5">{label}</label>}
+      <textarea value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} rows={rows}
+        className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none bg-white" />
+    </div>
+  );
+}
+function SaveBtn({ onClick, saved }) {
+  return (
+    <button onClick={onClick}
+      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${saved ? "bg-green-500 text-white" : "bg-blue-600 hover:bg-blue-500 text-white"}`}>
+      {saved ? <><CheckCircle size={15} /> Saved!</> : <><Check size={15} /> Save Changes</>}
+    </button>
+  );
+}
+
+/* ─────────────────────── AUTH PAGE ─────────────────────── */
+function AuthPage({ onLogin }) {
+  const [mode, setMode] = useState("login");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const submit = () => {
+    if (!email || !pass) return;
+    setLoading(true);
+    setTimeout(() => { setLoading(false); onLogin(); }, 1400);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600 rounded-full opacity-10 blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500 rounded-full opacity-10 blur-3xl" />
+        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)", backgroundSize: "32px 32px" }} />
+      </div>
+      <div className="relative w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2.5 mb-3">
+            <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <Zap size={20} className="text-white" />
+            </div>
+            <span className="text-3xl font-black text-white tracking-tight">BusinessHub</span>
+          </div>
+          <p className="text-slate-400 text-sm">Build professional landing pages — no code needed</p>
+        </div>
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+          <h2 className="text-white font-bold text-xl mb-6 text-center">
+            {mode === "login" ? "Welcome back 👋" : "Create your account ✨"}
+          </h2>
+          {mode === "signup" && (
+            <div className="mb-4">
+              <label className="block text-slate-300 text-sm font-medium mb-1.5">Full Name</label>
+              <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
+                className="w-full bg-white/10 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-400 text-sm transition-colors" />
+            </div>
+          )}
+          <div className="mb-4">
+            <label className="block text-slate-300 text-sm font-medium mb-1.5">Email Address</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com"
+              className="w-full bg-white/10 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-400 text-sm transition-colors" />
+          </div>
+          <div className="mb-6">
+            <label className="block text-slate-300 text-sm font-medium mb-1.5">Password</label>
+            <input type="password" value={pass} onChange={(e) => setPass(e.target.value)} placeholder="••••••••"
+              className="w-full bg-white/10 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-400 text-sm transition-colors" />
+          </div>
+          <button onClick={submit} disabled={loading}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 disabled:opacity-60">
+            {loading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>{mode === "login" ? "Sign In" : "Get Started Free"}<ArrowRight size={16} /></>}
+          </button>
+          <p className="text-slate-500 text-center text-sm mt-5">
+            {mode === "login" ? "New here? " : "Already have an account? "}
+            <button onClick={() => setMode(mode === "login" ? "signup" : "login")} className="text-blue-400 hover:text-blue-300 font-semibold transition-colors">
+              {mode === "login" ? "Create free account" : "Sign in"}
+            </button>
+          </p>
+        </div>
+        <p className="text-center text-slate-600 text-xs mt-4">Demo: any email & password works</p>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────── SIDEBAR ─────────────────────── */
+const NAV = [
+  { id: "overview", label: "Overview", icon: LayoutDashboard },
+  { id: "business", label: "Business Info", icon: Building2 },
+  { id: "services", label: "Services", icon: Wrench },
+  { id: "pricing", label: "Pricing Plans", icon: DollarSign },
+  { id: "testimonials", label: "Testimonials", icon: Star },
+  { id: "faq", label: "FAQ", icon: HelpCircle },
+  { id: "social", label: "Social & Contact", icon: Share2 },
+];
+
+function Sidebar({ active, setActive, onPreview, onLogout, biz, onPublish, mobileOpen, setMobileOpen }) {
+  const Inner = () => (
+    <div className="flex flex-col h-full">
+      <div className="p-5 border-b border-white/8">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-blue-500/30">
+            <Zap size={16} className="text-white" />
+          </div>
+          <span className="text-white font-black text-lg tracking-tight">BusinessHub</span>
+        </div>
+      </div>
+      <div className="px-4 py-3 border-b border-white/8">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-md">
+            {biz.logoText}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-white font-semibold text-sm truncate">{biz.name}</p>
+            <span className={`text-xs font-medium ${biz.published ? "text-green-400" : "text-slate-500"}`}>
+              {biz.published ? "● Published" : "○ Draft"}
+            </span>
+          </div>
+        </div>
+      </div>
+      <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+        {NAV.map(({ id, label, icon: Icon }) => (
+          <button key={id} onClick={() => { setActive(id); setMobileOpen(false); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${active === id ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" : "text-slate-400 hover:text-white hover:bg-white/8"}`}>
+            <Icon size={17} className="flex-shrink-0" />
+            <span>{label}</span>
+          </button>
+        ))}
+      </nav>
+      <div className="p-3 border-t border-white/8 space-y-1">
+        <button onClick={onPreview}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/8 transition-all">
+          <Eye size={17} /><span>Preview Page</span>
+        </button>
+        <button onClick={onPublish}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-400 hover:to-orange-400 transition-all shadow-md shadow-amber-500/20">
+          <ExternalLink size={17} /><span>Publish Page</span>
+        </button>
+        <button onClick={onLogout}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all">
+          <LogOut size={17} /><span>Sign Out</span>
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      <div className="hidden lg:flex flex-col w-64 bg-slate-900 border-r border-slate-800 flex-shrink-0 h-screen overflow-hidden">
+        <Inner />
+      </div>
+      <div className="lg:hidden fixed top-0 inset-x-0 z-50 bg-slate-900 border-b border-slate-800 px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center"><Zap size={13} className="text-white" /></div>
+          <span className="text-white font-black">BusinessHub</span>
+        </div>
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="text-white p-1">{mobileOpen ? <X size={22} /> : <Menu size={22} />}</button>
+      </div>
+      {mobileOpen && (
+        <div className="lg:hidden fixed inset-0 z-40 flex">
+          <div className="w-72 bg-slate-900 h-full overflow-y-auto pt-14"><Inner /></div>
+          <div className="flex-1 bg-black/60" onClick={() => setMobileOpen(false)} />
+        </div>
+      )}
+    </>
+  );
+}
+
+/* ─────────────────────── OVERVIEW TAB ─────────────────────── */
+function OverviewTab({ biz }) {
+  const stats = [
+    { label: "Page Views", val: "1,284", icon: BarChart2, color: "blue" },
+    { label: "WhatsApp Clicks", val: "47", icon: MessageCircle, color: "green" },
+    { label: "Services Listed", val: biz.services.length, icon: Wrench, color: "purple" },
+    { label: "Pricing Plans", val: biz.pricing.length, icon: DollarSign, color: "amber" },
+  ];
+  const colors = { blue: "bg-blue-50 text-blue-600", green: "bg-green-50 text-green-600", purple: "bg-purple-50 text-purple-600", amber: "bg-amber-50 text-amber-600" };
+  return (
+    <div>
+      <div className="mb-6 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-xl shadow-blue-600/20">
+        <p className="text-blue-200 text-sm font-medium mb-1">Welcome back 👋</p>
+        <h2 className="text-2xl font-black mb-1">{biz.name}</h2>
+        <p className="text-blue-200 text-sm">{biz.published ? "Your landing page is live and getting views!" : "Your page is in draft — hit Publish to go live."}</p>
+        <div className={`mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold ${biz.published ? "bg-green-400/20 text-green-200" : "bg-white/20 text-white/80"}`}>
+          {biz.published ? "● Live" : "○ Draft"}
+        </div>
+      </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {stats.map((s) => {
+          const Icon = s.icon;
+          return (
+            <div key={s.label} className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${colors[s.color]}`}>
+                <Icon size={18} />
+              </div>
+              <p className="text-2xl font-black text-slate-800">{s.val}</p>
+              <p className="text-slate-500 text-xs mt-0.5">{s.label}</p>
+            </div>
+          );
+        })}
+      </div>
+      <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+        <h3 className="font-bold text-slate-800 mb-4">🚀 Quick Setup Checklist</h3>
+        <div className="space-y-3">
+          {[
+            { text: "Fill in your business information", done: !!biz.name },
+            { text: "Add your services", done: biz.services.length > 0 },
+            { text: "Set up pricing plans", done: biz.pricing.length > 0 },
+            { text: "Add contact & WhatsApp number", done: !!biz.whatsapp },
+            { text: "Publish your landing page", done: biz.published },
+          ].map((item, i) => (
+            <div key={i} className="flex items-center gap-3">
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${item.done ? "bg-green-500" : "bg-slate-200"}`}>
+                {item.done && <Check size={11} className="text-white" />}
+              </div>
+              <span className={`text-sm ${item.done ? "text-slate-400 line-through" : "text-slate-700"}`}>{item.text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────── BUSINESS INFO TAB ─────────────────────── */
+function BusinessTab({ biz, setBiz }) {
+  const [saved, setSaved] = useState(false);
+  const save = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
+  const update = (k) => (v) => setBiz((b) => ({ ...b, [k]: v }));
+  return (
+    <div className="space-y-5 max-w-2xl">
+      <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+        <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2"><Building2 size={18} className="text-blue-600" /> Business Identity</h3>
+        <div className="space-y-4">
+          <div className="flex gap-4 items-end">
+            <div className="flex-1">
+              <Input label="Business Name" value={biz.name} onChange={update("name")} placeholder="e.g. Buike Tech" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Logo Letters</label>
+              <input value={biz.logoText} onChange={(e) => update("logoText")(e.target.value.toUpperCase().slice(0, 2))} maxLength={2}
+                className="w-16 border border-slate-200 rounded-xl px-3 py-2.5 text-center font-black text-slate-800 focus:outline-none focus:border-blue-500 text-sm bg-white" />
+            </div>
+          </div>
+          <Input label="Tagline" value={biz.tagline} onChange={update("tagline")} placeholder="A short powerful tagline" />
+          <Textarea label="About Your Business" value={biz.description} onChange={update("description")} placeholder="Describe your business..." rows={4} />
+        </div>
+      </div>
+      <div className="flex justify-end"><SaveBtn onClick={save} saved={saved} /></div>
+    </div>
+  );
+}
+
+/* ─────────────────────── SERVICES TAB ─────────────────────── */
+function ServicesTab({ biz, setBiz }) {
+  const [adding, setAdding] = useState(false);
+  const [ns, setNs] = useState({ title: "", desc: "", icon: "⚡" });
+  const [saved, setSaved] = useState(false);
+  const icons = ["🌐", "📱", "✨", "🚀", "💡", "🎯", "🔧", "📊", "🎨", "💰", "📦", "🤝"];
+
+  const addService = () => {
+    if (!ns.title) return;
+    setBiz((b) => ({ ...b, services: [...b.services, { id: uid(), ...ns }] }));
+    setNs({ title: "", desc: "", icon: "⚡" }); setAdding(false);
+  };
+  const del = (id) => setBiz((b) => ({ ...b, services: b.services.filter((s) => s.id !== id) }));
+  const save = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
+
+  return (
+    <div className="space-y-4 max-w-2xl">
+      <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-bold text-slate-800 flex items-center gap-2"><Wrench size={18} className="text-blue-600" /> Services ({biz.services.length})</h3>
+          <button onClick={() => setAdding(true)} className="flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-500 transition-colors">
+            <Plus size={15} /> Add Service
+          </button>
+        </div>
+        <div className="space-y-3">
+          {biz.services.map((s) => (
+            <div key={s.id} className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 group">
+              <span className="text-2xl leading-none mt-0.5">{s.icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-slate-800 text-sm">{s.title}</p>
+                <p className="text-slate-500 text-xs mt-0.5 line-clamp-2">{s.desc}</p>
+              </div>
+              <button onClick={() => del(s.id)} className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-all p-1 flex-shrink-0">
+                <Trash2 size={15} />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+      {adding && (
+        <div className="bg-white rounded-2xl p-5 border-2 border-blue-500/30 shadow-sm space-y-3">
+          <h4 className="font-bold text-slate-800 text-sm">New Service</h4>
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">Pick Icon</label>
+            <div className="flex flex-wrap gap-2">
+              {icons.map((ic) => (
+                <button key={ic} onClick={() => setNs((n) => ({ ...n, icon: ic }))}
+                  className={`text-xl p-2 rounded-xl border-2 transition-all ${ns.icon === ic ? "border-blue-500 bg-blue-50" : "border-slate-200 hover:border-slate-300"}`}>
+                  {ic}
+                </button>
+              ))}
+            </div>
+          </div>
+          <Input label="Service Title" value={ns.title} onChange={(v) => setNs((n) => ({ ...n, title: v }))} placeholder="e.g. Web Design" />
+          <Textarea label="Description" value={ns.desc} onChange={(v) => setNs((n) => ({ ...n, desc: v }))} placeholder="What does this service include?" rows={2} />
+          <div className="flex gap-2">
+            <button onClick={addService} className="flex-1 bg-blue-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-500 transition-colors">Add Service</button>
+            <button onClick={() => setAdding(false)} className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors">Cancel</button>
+          </div>
+        </div>
+      )}
+      <div className="flex justify-end"><SaveBtn onClick={save} saved={saved} /></div>
+    </div>
+  );
+}
+
+/* ─────────────────────── PRICING TAB ─────────────────────── */
+function PricingTab({ biz, setBiz }) {
+  const [adding, setAdding] = useState(false);
+  const [np, setNp] = useState({ name: "", price: "", cur: "₦", period: "/mo", hot: false, features: [""] });
+  const [saved, setSaved] = useState(false);
+
+  const addPlan = () => {
+    if (!np.name || !np.price) return;
+    setBiz((b) => ({ ...b, pricing: [...b.pricing, { id: uid(), ...np, features: np.features.filter(Boolean) }] }));
+    setNp({ name: "", price: "", cur: "₦", period: "/mo", hot: false, features: [""] }); setAdding(false);
+  };
+  const del = (id) => setBiz((b) => ({ ...b, pricing: b.pricing.filter((p) => p.id !== id) }));
+  const setFeat = (i, val) => setNp((n) => { const f = [...n.features]; f[i] = val; return { ...n, features: f }; });
+  const save = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
+
+  return (
+    <div className="space-y-4 max-w-2xl">
+      <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-bold text-slate-800 flex items-center gap-2"><DollarSign size={18} className="text-blue-600" /> Pricing Plans ({biz.pricing.length})</h3>
+          <button onClick={() => setAdding(true)} className="flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-500 transition-colors">
+            <Plus size={15} /> Add Plan
+          </button>
+        </div>
+        <div className="space-y-3">
+          {biz.pricing.map((p) => (
+            <div key={p.id} className={`flex items-start gap-3 p-4 rounded-xl border group ${p.hot ? "bg-blue-50 border-blue-200" : "bg-slate-50 border-slate-100"}`}>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="font-bold text-slate-800">{p.name}</p>
+                  {p.hot && <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">Popular</span>}
+                </div>
+                <p className="text-blue-700 font-black text-lg">{p.cur}{p.price}<span className="text-slate-500 font-normal text-sm">{p.period}</span></p>
+                <p className="text-slate-500 text-xs mt-1">{p.features.slice(0, 3).join(" · ")}{p.features.length > 3 ? ` +${p.features.length - 3} more` : ""}</p>
+              </div>
+              <button onClick={() => del(p.id)} className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-all p-1 flex-shrink-0"><Trash2 size={15} /></button>
+            </div>
+          ))}
+        </div>
+      </div>
+      {adding && (
+        <div className="bg-white rounded-2xl p-5 border-2 border-blue-500/30 shadow-sm space-y-3">
+          <h4 className="font-bold text-slate-800 text-sm">New Pricing Plan</h4>
+          <div className="grid grid-cols-2 gap-3">
+            <Input label="Plan Name" value={np.name} onChange={(v) => setNp((n) => ({ ...n, name: v }))} placeholder="e.g. Business" />
+            <Input label="Price (numbers only)" value={np.price} onChange={(v) => setNp((n) => ({ ...n, price: v }))} placeholder="75,000" />
+          </div>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={np.hot} onChange={(e) => setNp((n) => ({ ...n, hot: e.target.checked }))} className="rounded" />
+            <span className="text-sm font-medium text-slate-700">Mark as "Most Popular"</span>
+          </label>
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">Features (one per line)</label>
+            {np.features.map((f, i) => (
+              <div key={i} className="flex gap-2 mb-2">
+                <input value={f} onChange={(e) => setFeat(i, e.target.value)} placeholder={`Feature ${i + 1}`}
+                  className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 bg-white" />
+                {i === np.features.length - 1 ? (
+                  <button onClick={() => setNp((n) => ({ ...n, features: [...n.features, ""] }))} className="w-9 h-9 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-100 transition-colors"><Plus size={15} /></button>
+                ) : (
+                  <button onClick={() => setNp((n) => ({ ...n, features: n.features.filter((_, j) => j !== i) }))} className="w-9 h-9 bg-red-50 text-red-400 rounded-xl flex items-center justify-center hover:bg-red-100 transition-colors"><Trash2 size={13} /></button>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <button onClick={addPlan} className="flex-1 bg-blue-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-500 transition-colors">Add Plan</button>
+            <button onClick={() => setAdding(false)} className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors">Cancel</button>
+          </div>
+        </div>
+      )}
+      <div className="flex justify-end"><SaveBtn onClick={save} saved={saved} /></div>
+    </div>
+  );
+}
+
+/* ─────────────────────── TESTIMONIALS TAB ─────────────────────── */
+function TestimonialsTab({ biz, setBiz }) {
+  const [adding, setAdding] = useState(false);
+  const [nt, setNt] = useState({ name: "", role: "", text: "", av: "" });
+  const [saved, setSaved] = useState(false);
+  const addT = () => {
+    if (!nt.name || !nt.text) return;
+    setBiz((b) => ({ ...b, testimonials: [...b.testimonials, { id: uid(), ...nt, av: nt.name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase() }] }));
+    setNt({ name: "", role: "", text: "", av: "" }); setAdding(false);
+  };
+  const del = (id) => setBiz((b) => ({ ...b, testimonials: b.testimonials.filter((t) => t.id !== id) }));
+  const save = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
+  const avatarColors = ["from-blue-500 to-indigo-600", "from-purple-500 to-pink-600", "from-green-500 to-teal-600", "from-amber-500 to-orange-600", "from-red-500 to-rose-600"];
+  return (
+    <div className="space-y-4 max-w-2xl">
+      <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-bold text-slate-800 flex items-center gap-2"><Star size={18} className="text-blue-600" /> Testimonials ({biz.testimonials.length})</h3>
+          <button onClick={() => setAdding(true)} className="flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-500 transition-colors"><Plus size={15} /> Add</button>
+        </div>
+        <div className="space-y-3">
+          {biz.testimonials.map((t, i) => (
+            <div key={t.id} className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 group">
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${avatarColors[i % avatarColors.length]} flex items-center justify-center text-white font-bold text-xs flex-shrink-0`}>{t.av}</div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-slate-800 text-sm">{t.name} <span className="text-slate-400 font-normal">· {t.role}</span></p>
+                <p className="text-slate-500 text-xs mt-1 line-clamp-2">"{t.text}"</p>
+              </div>
+              <button onClick={() => del(t.id)} className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-all p-1 flex-shrink-0"><Trash2 size={15} /></button>
+            </div>
+          ))}
+        </div>
+      </div>
+      {adding && (
+        <div className="bg-white rounded-2xl p-5 border-2 border-blue-500/30 shadow-sm space-y-3">
+          <h4 className="font-bold text-slate-800 text-sm">New Testimonial</h4>
+          <div className="grid grid-cols-2 gap-3">
+            <Input label="Customer Name" value={nt.name} onChange={(v) => setNt((n) => ({ ...n, name: v }))} placeholder="Full Name" />
+            <Input label="Role / Company" value={nt.role} onChange={(v) => setNt((n) => ({ ...n, role: v }))} placeholder="CEO, Company" />
+          </div>
+          <Textarea label="Review Text" value={nt.text} onChange={(v) => setNt((n) => ({ ...n, text: v }))} placeholder="What did they say about your business?" rows={3} />
+          <div className="flex gap-2">
+            <button onClick={addT} className="flex-1 bg-blue-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-500 transition-colors">Add Testimonial</button>
+            <button onClick={() => setAdding(false)} className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors">Cancel</button>
+          </div>
+        </div>
+      )}
+      <div className="flex justify-end"><SaveBtn onClick={save} saved={saved} /></div>
+    </div>
+  );
+}
+
+/* ─────────────────────── FAQ TAB ─────────────────────── */
+function FAQTab({ biz, setBiz }) {
+  const [adding, setAdding] = useState(false);
+  const [nf, setNf] = useState({ q: "", a: "" });
+  const [saved, setSaved] = useState(false);
+  const addF = () => {
+    if (!nf.q || !nf.a) return;
+    setBiz((b) => ({ ...b, faqs: [...b.faqs, { id: uid(), ...nf }] }));
+    setNf({ q: "", a: "" }); setAdding(false);
+  };
+  const del = (id) => setBiz((b) => ({ ...b, faqs: b.faqs.filter((f) => f.id !== id) }));
+  const save = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
+  return (
+    <div className="space-y-4 max-w-2xl">
+      <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-bold text-slate-800 flex items-center gap-2"><HelpCircle size={18} className="text-blue-600" /> FAQ ({biz.faqs.length})</h3>
+          <button onClick={() => setAdding(true)} className="flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-500 transition-colors"><Plus size={15} /> Add FAQ</button>
+        </div>
+        <div className="space-y-3">
+          {biz.faqs.map((f) => (
+            <div key={f.id} className="p-4 bg-slate-50 rounded-xl border border-slate-100 group">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-slate-800 text-sm">{f.q}</p>
+                  <p className="text-slate-500 text-xs mt-1 line-clamp-2">{f.a}</p>
+                </div>
+                <button onClick={() => del(f.id)} className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-all p-1 flex-shrink-0"><Trash2 size={15} /></button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {adding && (
+        <div className="bg-white rounded-2xl p-5 border-2 border-blue-500/30 shadow-sm space-y-3">
+          <h4 className="font-bold text-slate-800 text-sm">New FAQ</h4>
+          <Input label="Question" value={nf.q} onChange={(v) => setNf((n) => ({ ...n, q: v }))} placeholder="Common customer question" />
+          <Textarea label="Answer" value={nf.a} onChange={(v) => setNf((n) => ({ ...n, a: v }))} placeholder="Clear, helpful answer" rows={3} />
+          <div className="flex gap-2">
+            <button onClick={addF} className="flex-1 bg-blue-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-500 transition-colors">Add FAQ</button>
+            <button onClick={() => setAdding(false)} className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors">Cancel</button>
+          </div>
+        </div>
+      )}
+      <div className="flex justify-end"><SaveBtn onClick={save} saved={saved} /></div>
+    </div>
+  );
+}
+
+/* ─────────────────────── SOCIAL TAB ─────────────────────── */
+function SocialTab({ biz, setBiz }) {
+  const [saved, setSaved] = useState(false);
+  const up = (k) => (v) => setBiz((b) => ({ ...b, [k]: v }));
+  const save = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
+  return (
+    <div className="space-y-5 max-w-2xl">
+      <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm space-y-4">
+        <h3 className="font-bold text-slate-800 flex items-center gap-2"><MessageCircle size={18} className="text-green-500" /> WhatsApp & Contact</h3>
+        <Input label="WhatsApp Number" value={biz.whatsapp} onChange={up("whatsapp")} placeholder="09168144059" />
+        <Input label="Email Address" value={biz.email} onChange={up("email")} placeholder="hello@yourbusiness.com" />
+        <Input label="Phone Number" value={biz.phone} onChange={up("phone")} placeholder="Your phone number" />
+        <Input label="Business Address" value={biz.address} onChange={up("address")} placeholder="City, State, Country" />
+      </div>
+      <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm space-y-4">
+        <h3 className="font-bold text-slate-800 flex items-center gap-2"><Share2 size={18} className="text-blue-600" /> Social Media</h3>
+        <Input label="TikTok Handle" value={biz.tiktok} onChange={up("tiktok")} placeholder="@yourhandle" />
+        <Input label="Instagram Handle" value={biz.instagram} onChange={up("instagram")} placeholder="@yourhandle" />
+        <Input label="Twitter / X Handle" value={biz.twitter} onChange={up("twitter")} placeholder="@yourhandle" />
+        <Input label="Facebook Page URL" value={biz.facebook} onChange={up("facebook")} placeholder="facebook.com/yourpage" />
+      </div>
+      <div className="flex justify-end"><SaveBtn onClick={save} saved={saved} /></div>
+    </div>
+  );
+}
+
+/* ─────────────────────── PUBLISH MODAL ─────────────────────── */
+function PublishModal({ biz, onClose, onPublish }) {
+  const [copied, setCopied] = useState(false);
+  const url = `https://businesshub.app/${biz.name.toLowerCase().replace(/\s+/g, "-")}`;
+  const copy = () => { setCopied(true); setTimeout(() => setCopied(false), 2000); };
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8">
+        <div className="text-center mb-6">
+          <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-500/30">
+            <CheckCircle size={32} className="text-white" />
+          </div>
+          <h2 className="text-2xl font-black text-slate-800">
+            {biz.published ? "Page Updated! 🎉" : "Page Published! 🎉"}
+          </h2>
+          <p className="text-slate-500 text-sm mt-2">Your landing page is now live and ready to share</p>
+        </div>
+        <div className="bg-slate-50 rounded-2xl p-4 flex items-center gap-3 mb-5 border border-slate-200">
+          <Globe size={16} className="text-blue-600 flex-shrink-0" />
+          <p className="text-slate-700 text-sm font-medium flex-1 truncate">{url}</p>
+          <button onClick={copy} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${copied ? "bg-green-500 text-white" : "bg-blue-600 text-white hover:bg-blue-500"}`}>
+            {copied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> Copy</>}
+          </button>
+        </div>
+        <p className="text-xs text-center text-slate-400 mb-5">Share this link with customers, add it to your bio, or send via WhatsApp!</p>
+        <div className="flex gap-3">
+          <button onClick={() => { onPublish(); onClose(); }}
+            className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 rounded-2xl hover:from-green-400 hover:to-emerald-500 transition-all shadow-md shadow-green-500/20">
+            {biz.published ? "Update Page" : "Confirm Publish"}
+          </button>
+          <button onClick={onClose} className="px-5 py-3 rounded-2xl text-slate-600 font-semibold border border-slate-200 hover:bg-slate-50 transition-colors">Cancel</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────── LANDING PAGE ─────────────────────── */
+function LandingPage({ biz, onBack }) {
+  const [openFaq, setOpenFaq] = useState(null);
+  const [formName, setFormName] = useState("");
+  const [formEmail, setFormEmail] = useState("");
+  const [formMsg, setFormMsg] = useState("");
+  const [formSent, setFormSent] = useState(false);
+  const avatarGrads = ["from-blue-500 to-indigo-600", "from-purple-500 to-pink-600", "from-green-500 to-teal-600"];
+
+  const submitForm = () => {
+    if (!formName || !formEmail) return;
+    setFormSent(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-white font-sans">
+      {/* Back Bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-sm px-4 py-3 flex items-center justify-between border-b border-slate-700">
+        <button onClick={onBack} className="flex items-center gap-2 text-slate-300 hover:text-white text-sm font-medium transition-colors">
+          ← Back to Dashboard
+        </button>
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 bg-blue-600 rounded-md flex items-center justify-center"><Zap size={12} className="text-white" /></div>
+          <span className="text-white text-xs font-bold">PREVIEW MODE</span>
+        </div>
+        <a href={waLink(biz.whatsapp)} target="_blank" rel="noreferrer"
+          className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">
+          <MessageCircle size={13} /> WhatsApp
+        </a>
+      </div>
+
+      {/* ── HERO ── */}
+      <section className="pt-14 min-h-screen flex items-center relative overflow-hidden bg-slate-950">
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-1/4 w-72 h-72 bg-blue-600 rounded-full opacity-20 blur-3xl" />
+          <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-indigo-600 rounded-full opacity-15 blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-800 rounded-full opacity-10 blur-3xl" />
+          <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0)", backgroundSize: "40px 40px" }} />
+        </div>
+        <div className="relative max-w-5xl mx-auto px-6 py-20 text-center">
+          <div className="inline-flex items-center gap-2 bg-blue-600/20 border border-blue-500/30 text-blue-300 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+            <Zap size={14} /> Digital Solutions for Nigerian Businesses
+          </div>
+          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-700 rounded-2xl flex items-center justify-center text-white font-black text-2xl mx-auto mb-6 shadow-2xl shadow-blue-500/30">
+            {biz.logoText}
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black text-white mb-5 leading-none tracking-tight">
+            {biz.name}
+          </h1>
+          <p className="text-xl md:text-2xl text-blue-200 font-medium mb-4 max-w-2xl mx-auto">{biz.tagline}</p>
+          <p className="text-slate-400 text-base max-w-xl mx-auto mb-10 leading-relaxed">{biz.description}</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href={waLink(biz.whatsapp)} target="_blank" rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2.5 bg-green-500 hover:bg-green-400 text-white font-bold px-8 py-4 rounded-2xl transition-all shadow-xl shadow-green-500/30 text-lg">
+              <MessageCircle size={20} /> Chat on WhatsApp
+            </a>
+            <a href="#services"
+              className="inline-flex items-center justify-center gap-2.5 bg-white/10 hover:bg-white/20 text-white font-bold px-8 py-4 rounded-2xl transition-all border border-white/20 text-lg">
+              View Services <ArrowRight size={18} />
+            </a>
+          </div>
+          <div className="mt-16 grid grid-cols-3 gap-6 max-w-lg mx-auto">
+            {[["100+", "Happy Clients"], ["3 Days", "Avg Delivery"], ["24/7", "Support"]].map(([n, l]) => (
+              <div key={l} className="text-center">
+                <p className="text-3xl font-black text-white">{n}</p>
+                <p className="text-slate-500 text-xs mt-1">{l}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── ABOUT ── */}
+      <section className="py-24 bg-white">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+              <span className="text-blue-600 font-bold text-sm uppercase tracking-widest">About Us</span>
+              <h2 className="text-4xl font-black text-slate-900 mt-2 mb-5 leading-tight">Why Businesses Choose {biz.name}</h2>
+              <p className="text-slate-600 leading-relaxed mb-8">{biz.description}</p>
+              <a href={waLink(biz.whatsapp)} target="_blank" rel="noreferrer"
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-xl transition-colors">
+                Get in Touch <ArrowRight size={16} />
+              </a>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { icon: "⚡", title: "Fast Delivery", text: "Projects completed in 3–7 days" },
+                { icon: "💰", title: "Affordable", text: "Transparent pricing, no hidden fees" },
+                { icon: "🎯", title: "Results Focused", text: "We deliver measurable outcomes" },
+                { icon: "🤝", title: "Always Available", text: "24/7 support for all clients" },
+              ].map((c) => (
+                <div key={c.title} className="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+                  <span className="text-2xl">{c.icon}</span>
+                  <h4 className="font-bold text-slate-800 mt-2 mb-1 text-sm">{c.title}</h4>
+                  <p className="text-slate-500 text-xs">{c.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SERVICES ── */}
+      <section id="services" className="py-24 bg-slate-50">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-14">
+            <span className="text-blue-600 font-bold text-sm uppercase tracking-widest">What We Do</span>
+            <h2 className="text-4xl font-black text-slate-900 mt-2">Our Services</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
+            {biz.services.map((s) => (
+              <div key={s.id} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200">
+                <span className="text-4xl block mb-4">{s.icon}</span>
+                <h3 className="text-lg font-black text-slate-800 mb-2">{s.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{s.desc}</p>
+                <a href={waLink(biz.whatsapp)} target="_blank" rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 text-blue-600 font-semibold text-sm mt-4 hover:gap-2.5 transition-all">
+                  Get Quote <ArrowRight size={14} />
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── PRICING ── */}
+      <section id="pricing" className="py-24 bg-white">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-14">
+            <span className="text-blue-600 font-bold text-sm uppercase tracking-widest">Transparent Pricing</span>
+            <h2 className="text-4xl font-black text-slate-900 mt-2">Simple, Honest Pricing</h2>
+            <p className="text-slate-500 mt-3">No hidden fees. Pick the plan that suits your business.</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {biz.pricing.map((p) => (
+              <div key={p.id} className={`rounded-3xl p-7 border-2 relative transition-all hover:-translate-y-1 hover:shadow-lg ${p.hot ? "bg-gradient-to-b from-blue-600 to-indigo-700 border-blue-500 shadow-xl shadow-blue-500/20" : "bg-white border-slate-100"}`}>
+                {p.hot && <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-amber-400 text-slate-900 text-xs font-black px-4 py-1 rounded-full">⭐ MOST POPULAR</div>}
+                <h3 className={`font-black text-xl mb-1 ${p.hot ? "text-white" : "text-slate-800"}`}>{p.name}</h3>
+                <div className="mb-6">
+                  <span className={`text-4xl font-black ${p.hot ? "text-white" : "text-slate-900"}`}>{p.cur}{p.price}</span>
+                  <span className={`text-sm ${p.hot ? "text-blue-200" : "text-slate-400"}`}>{p.period}</span>
+                </div>
+                <div className="space-y-3 mb-8">
+                  {p.features.map((f, i) => (
+                    <div key={i} className="flex items-center gap-2.5">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${p.hot ? "bg-white/20" : "bg-blue-50"}`}>
+                        <Check size={11} className={p.hot ? "text-white" : "text-blue-600"} />
+                      </div>
+                      <span className={`text-sm ${p.hot ? "text-blue-100" : "text-slate-600"}`}>{f}</span>
+                    </div>
+                  ))}
+                </div>
+                <a href={waLink(biz.whatsapp)} target="_blank" rel="noreferrer"
+                  className={`block text-center py-3 rounded-xl font-bold transition-all ${p.hot ? "bg-white text-blue-700 hover:bg-blue-50" : "bg-blue-600 text-white hover:bg-blue-500"}`}>
+                  Get Started
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS ── */}
+      <section className="py-24 bg-slate-950">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-14">
+            <span className="text-blue-400 font-bold text-sm uppercase tracking-widest">Social Proof</span>
+            <h2 className="text-4xl font-black text-white mt-2">What Our Clients Say</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {biz.testimonials.map((t, i) => (
+              <div key={t.id} className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/8 transition-colors">
+                <div className="flex gap-0.5 mb-4">
+                  {[...Array(5)].map((_, j) => <span key={j} className="text-amber-400 text-sm">★</span>)}
+                </div>
+                <p className="text-slate-300 text-sm leading-relaxed mb-5">"{t.text}"</p>
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${avatarGrads[i % avatarGrads.length]} flex items-center justify-center text-white font-bold text-xs`}>{t.av}</div>
+                  <div>
+                    <p className="text-white font-bold text-sm">{t.name}</p>
+                    <p className="text-slate-500 text-xs">{t.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="py-24 bg-white">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-center mb-14">
+            <span className="text-blue-600 font-bold text-sm uppercase tracking-widest">FAQ</span>
+            <h2 className="text-4xl font-black text-slate-900 mt-2">Frequently Asked Questions</h2>
+          </div>
+          <div className="space-y-3">
+            {biz.faqs.map((f) => (
+              <div key={f.id} className="border border-slate-200 rounded-2xl overflow-hidden">
+                <button onClick={() => setOpenFaq(openFaq === f.id ? null : f.id)}
+                  className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-slate-50 transition-colors">
+                  <span className="font-bold text-slate-800 text-sm pr-4">{f.q}</span>
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${openFaq === f.id ? "bg-blue-600 text-white rotate-180" : "bg-slate-100 text-slate-600"}`}>
+                    <ChevronDown size={15} />
+                  </div>
+                </button>
+                {openFaq === f.id && (
+                  <div className="px-6 pb-5 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-4">{f.a}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CONTACT ── */}
+      <section id="contact" className="py-24 bg-slate-50">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-12 items-start">
+            <div>
+              <span className="text-blue-600 font-bold text-sm uppercase tracking-widest">Get In Touch</span>
+              <h2 className="text-4xl font-black text-slate-900 mt-2 mb-4">Ready to Grow Your Business?</h2>
+              <p className="text-slate-600 mb-8">Reach out via WhatsApp for the fastest response, or fill the form and we'll get back to you shortly.</p>
+              <div className="space-y-4 mb-8">
+                {[
+                  { icon: MessageCircle, text: biz.whatsapp, color: "green", href: waLink(biz.whatsapp) },
+                  { icon: Mail, text: biz.email, color: "blue", href: `mailto:${biz.email}` },
+                  { icon: Phone, text: biz.phone, color: "purple", href: `tel:${biz.phone}` },
+                  { icon: MapPin, text: biz.address, color: "red", href: null },
+                ].map(({ icon: Icon, text, color, href }) => {
+                  const colors2 = { green: "bg-green-50 text-green-600", blue: "bg-blue-50 text-blue-600", purple: "bg-purple-50 text-purple-600", red: "bg-red-50 text-red-600" };
+                  const inner = (
+                    <div key={text} className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colors2[color]}`}><Icon size={18} /></div>
+                      <span className="text-slate-700 text-sm font-medium">{text}</span>
+                    </div>
+                  );
+                  return href ? <a href={href} key={text} target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity">{inner}</a> : <div key={text}>{inner}</div>;
+                })}
+              </div>
+              <a href={waLink(biz.whatsapp)} target="_blank" rel="noreferrer"
+                className="inline-flex items-center gap-2.5 bg-green-500 hover:bg-green-400 text-white font-bold px-7 py-4 rounded-2xl transition-all shadow-lg shadow-green-500/20 text-lg">
+                <MessageCircle size={20} /> Chat on WhatsApp Now
+              </a>
+            </div>
+            <div className="bg-white rounded-3xl p-7 shadow-sm border border-slate-100">
+              {formSent ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><CheckCircle size={28} className="text-green-600" /></div>
+                  <h3 className="font-black text-slate-800 text-xl mb-2">Message Sent! 🎉</h3>
+                  <p className="text-slate-500 text-sm">We'll get back to you within 24 hours. Or chat on WhatsApp for instant response!</p>
+                  <a href={waLink(biz.whatsapp)} target="_blank" rel="noreferrer"
+                    className="inline-flex items-center gap-2 mt-5 bg-green-500 text-white font-bold px-5 py-3 rounded-xl text-sm hover:bg-green-400 transition-colors">
+                    <MessageCircle size={16} /> WhatsApp Us
+                  </a>
+                </div>
+              ) : (
+                <>
+                  <h3 className="font-black text-slate-800 text-xl mb-6">Send a Message</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-700 mb-1.5">Your Name</label>
+                      <input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Full Name"
+                        className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 bg-white" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email Address</label>
+                      <input value={formEmail} onChange={(e) => setFormEmail(e.target.value)} placeholder="your@email.com"
+                        className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 bg-white" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-700 mb-1.5">Message</label>
+                      <textarea value={formMsg} onChange={(e) => setFormMsg(e.target.value)} placeholder="How can we help you?" rows={4}
+                        className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 resize-none bg-white" />
+                    </div>
+                    <button onClick={submitForm}
+                      className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+                      <Send size={16} /> Send Message
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer className="bg-slate-950 py-16 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-10 mb-12">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-700 rounded-xl flex items-center justify-center text-white font-black text-sm">{biz.logoText}</div>
+                <span className="text-white font-black text-xl">{biz.name}</span>
+              </div>
+              <p className="text-slate-500 text-sm leading-relaxed">{biz.tagline}</p>
+              <div className="flex gap-3 mt-5">
+                {biz.tiktok && <a href="#" className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/20 transition-all text-xs font-bold">TK</a>}
+                {biz.instagram && <a href="#" className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center text-slate-400 hover:text-pink-400 hover:bg-pink-500/20 transition-all"><Instagram size={16} /></a>}
+                {biz.twitter && <a href="#" className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center text-slate-400 hover:text-sky-400 hover:bg-sky-500/20 transition-all"><Twitter size={16} /></a>}
+                {biz.facebook && <a href="#" className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center text-slate-400 hover:text-blue-400 hover:bg-blue-500/20 transition-all"><Facebook size={16} /></a>}
+              </div>
+            </div>
+            <div>
+              <h4 className="text-white font-bold mb-4 text-sm">Quick Links</h4>
+              <div className="space-y-2">
+                {["About", "Services", "Pricing", "Testimonials", "FAQ", "Contact"].map((l) => (
+                  <a key={l} href={`#${l.toLowerCase()}`} className="block text-slate-500 hover:text-white text-sm transition-colors">{l}</a>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="text-white font-bold mb-4 text-sm">Contact Us</h4>
+              <div className="space-y-3">
+                <a href={waLink(biz.whatsapp)} target="_blank" rel="noreferrer" className="flex items-center gap-2.5 text-slate-500 hover:text-green-400 text-sm transition-colors"><MessageCircle size={15} />{biz.whatsapp}</a>
+                <a href={`mailto:${biz.email}`} className="flex items-center gap-2.5 text-slate-500 hover:text-white text-sm transition-colors"><Mail size={15} />{biz.email}</a>
+                <div className="flex items-start gap-2.5 text-slate-500 text-sm"><MapPin size={15} className="mt-0.5 flex-shrink-0" />{biz.address}</div>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-slate-600 text-xs">© {new Date().getFullYear()} {biz.name}. All rights reserved.</p>
+            <p className="text-slate-600 text-xs flex items-center gap-1">Built with <Zap size={11} className="text-blue-500" /> BusinessHub</p>
+          </div>
+        </div>
+      </footer>
+
+      {/* Floating WhatsApp */}
+      <a href={waLink(biz.whatsapp)} target="_blank" rel="noreferrer"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-green-500 hover:bg-green-400 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/40 transition-all hover:scale-110 z-40">
+        <MessageCircle size={24} className="text-white" />
+      </a>
+    </div>
+  );
+}
+
+/* ─────────────────────── ROOT APP ─────────────────────── */
+export default function App() {
+  const [screen, setScreen] = useState("auth");
+  const [activeTab, setActiveTab] = useState("overview");
+  const [biz, setBiz] = useState(DEFAULT);
+  const [showPublish, setShowPublish] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const TABS = { overview: OverviewTab, business: BusinessTab, services: ServicesTab, pricing: PricingTab, testimonials: TestimonialsTab, faq: FAQTab, social: SocialTab };
+  const TabComponent = TABS[activeTab] || OverviewTab;
+
+  if (screen === "auth") return <AuthPage onLogin={() => setScreen("dashboard")} />;
+  if (screen === "preview") return <LandingPage biz={biz} onBack={() => setScreen("dashboard")} />;
+
+  return (
+    <div className="flex h-screen bg-slate-50 overflow-hidden">
+      <Sidebar active={activeTab} setActive={setActiveTab} onPreview={() => setScreen("preview")} onLogout={() => setScreen("auth")} biz={biz} onPublish={() => setShowPublish(true)} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
+      <main className="flex-1 overflow-y-auto lg:pt-0 pt-14">
+        <div className="max-w-3xl mx-auto px-5 py-8">
+          <div className="mb-7">
+            <h1 className="text-2xl font-black text-slate-900 capitalize">{activeTab === "overview" ? "Dashboard Overview" : activeTab === "business" ? "Business Info" : activeTab === "social" ? "Social & Contact" : `${activeTab.charAt(0).toUpperCase()}${activeTab.slice(1)}`}</h1>
+            <p className="text-slate-500 text-sm mt-1">
+              {activeTab === "overview" && "Your page performance at a glance."}
+              {activeTab === "business" && "Update your business name, tagline, and description."}
+              {activeTab === "services" && "Manage the services shown on your landing page."}
+              {activeTab === "pricing" && "Set up your pricing plans."}
+              {activeTab === "testimonials" && "Showcase customer reviews and success stories."}
+              {activeTab === "faq" && "Answer common questions your customers ask."}
+              {activeTab === "social" && "Add your contact details and social media links."}
+            </p>
+          </div>
+          <TabComponent biz={biz} setBiz={setBiz} />
+        </div>
+      </main>
+      {showPublish && (
+        <PublishModal biz={biz} onClose={() => setShowPublish(false)} onPublish={() => setBiz((b) => ({ ...b, published: true }))} />
+      )}
+    </div>
+  );
+}
