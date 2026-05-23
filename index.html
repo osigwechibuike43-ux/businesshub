@@ -1,1 +1,1237 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Jul'en Beauty Bliss — Your Beauty, Our Duty</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8cc7f;
+    --gold-dark: #a07830;
+    --black: #0a0a0a;
+    --dark: #111111;
+    --dark2: #1a1a1a;
+    --cream: #f9f4ee;
+    --cream2: #f0e8dc;
+    --white: #ffffff;
+    --text-muted: #888;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: .4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    transition: padding .3s;
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+    letter-spacing: .08em;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-logo span { font-style: italic; }
+
+  .nav-links {
+    display: flex; gap: 2.5rem; list-style: none;
+  }
+  .nav-links a {
+    color: var(--cream); text-decoration: none;
+    font-size: .7rem; letter-spacing: .18em; text-transform: uppercase;
+    transition: color .3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Montserrat', sans-serif;
+    font-size: .65rem; letter-spacing: .2em; text-transform: uppercase;
+    padding: .6rem 1.6rem; cursor: pointer;
+    transition: background .3s, color .3s;
+  }
+  .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,.08) 0%, transparent 70%),
+                linear-gradient(160deg, #0a0a0a 0%, #141008 60%, #0a0a0a 100%);
+  }
+
+  /* floating orbs */
+  .orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); pointer-events: none;
+    animation: float 8s ease-in-out infinite alternate;
+  }
+  .orb1 { width: 420px; height: 420px; background: rgba(201,168,76,.07); top: -100px; left: -120px; animation-delay: 0s; }
+  .orb2 { width: 300px; height: 300px; background: rgba(201,168,76,.05); bottom: -80px; right: -80px; animation-delay: 3s; }
+  .orb3 { width: 200px; height: 200px; background: rgba(201,168,76,.04); top: 30%; left: 60%; animation-delay: 1.5s; }
+
+  @keyframes float { from { transform: translateY(0); } to { transform: translateY(-30px); } }
+
+  /* decorative lines */
+  .hero-lines {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(90deg, rgba(201,168,76,.06) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(201,168,76,.06) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%);
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 780px; padding: 0 2rem;
+    animation: fadeUp .9s ease both;
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+  .hero-eyebrow {
+    font-size: .65rem; letter-spacing: .35em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.5rem;
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: ''; width: 40px; height: 1px; background: var(--gold); opacity: .5;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 300; line-height: 1.05;
+    letter-spacing: .02em;
+    margin-bottom: .5rem;
+    animation: fadeUp .9s .15s ease both;
+  }
+  .hero-title em { font-style: italic; color: var(--gold); }
+
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    font-style: italic; color: var(--text-muted);
+    letter-spacing: .12em; margin-bottom: 3rem;
+    animation: fadeUp .9s .3s ease both;
+  }
+
+  .hero-buttons {
+    display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp .9s .45s ease both;
+  }
+
+  .btn-primary {
+    background: var(--gold); color: var(--black);
+    font-family: 'Montserrat', sans-serif;
+    font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
+    padding: 1rem 2.8rem; border: none; cursor: pointer;
+    transition: background .3s, transform .2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent; color: var(--cream);
+    font-family: 'Montserrat', sans-serif;
+    font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
+    padding: 1rem 2.8rem; border: 1px solid rgba(249,244,238,.25); cursor: pointer;
+    transition: border-color .3s, color .3s, transform .2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .5rem;
+    color: var(--text-muted); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
+    animation: fadeUp 1s .8s ease both;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, transparent, var(--gold));
+    animation: scrollDrop 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollDrop { 0%,100%{transform:scaleY(0);transform-origin:top;} 50%{transform:scaleY(1);transform-origin:top;} 51%{transform-origin:bottom;} }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    border-top: 1px solid rgba(201,168,76,.2);
+    border-bottom: 1px solid rgba(201,168,76,.2);
+    padding: .9rem 0; overflow: hidden;
+    background: rgba(201,168,76,.04);
+  }
+  .marquee-inner {
+    display: flex; white-space: nowrap;
+    animation: marquee 30s linear infinite;
+  }
+  .marquee-inner span {
+    font-size: .6rem; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--gold); padding: 0 3rem;
+  }
+  .marquee-inner span::before { content: '✦ '; opacity: .6; }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 7rem 4rem; }
+
+  .section-label {
+    font-size: .6rem; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: .8rem;
+  }
+  .section-label::before { content:''; width:24px; height:1px; background:var(--gold); }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+    font-weight: 300; line-height: 1.1;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  /* ── ABOUT ── */
+  .about {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+    align-items: center; max-width: 1200px; margin: 0 auto;
+  }
+
+  .about-visual {
+    position: relative; aspect-ratio: 4/5;
+    background: var(--dark2);
+    border: 1px solid rgba(201,168,76,.15);
+    overflow: hidden;
+  }
+
+  /* Shop image placeholder styled beautifully */
+  .about-img-mock {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #1a1a0a 0%, #0f0f08 50%, #1a1208 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+
+  /* shelves simulation */
+  .shelf-sim {
+    width: 90%; height: 90%;
+    display: grid; grid-template-rows: repeat(4,1fr); gap: 6px;
+    padding: 10px;
+  }
+  .shelf-row {
+    background: rgba(201,168,76,.06);
+    border-bottom: 2px solid rgba(201,168,76,.3);
+    display: flex; align-items: flex-end; justify-content: space-around;
+    padding: 0 4px 4px;
+    position: relative;
+  }
+  .shelf-row::after {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(201,168,76,.05));
+  }
+  .product-stub {
+    width: 8px; border-radius: 2px 2px 0 0;
+    opacity: .7;
+  }
+
+  .about-corner {
+    position: absolute; bottom: -1px; right: -1px;
+    width: 80px; height: 80px;
+    border-top: 1px solid var(--gold); border-left: 1px solid var(--gold);
+    background: var(--black);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .about-corner span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: .7rem; font-style: italic; color: var(--gold);
+    text-align: center; line-height: 1.4;
+  }
+
+  .about-text { }
+  .about-text p {
+    color: var(--text-muted); font-size: .88rem; line-height: 1.9;
+    margin: 1.5rem 0;
+  }
+  .about-text p strong { color: var(--cream); font-weight: 500; }
+
+  .about-stats {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 2.5rem;
+    border-top: 1px solid rgba(201,168,76,.15); padding-top: 2.5rem;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem; font-weight: 300; color: var(--gold); line-height: 1;
+  }
+  .stat-label {
+    font-size: .62rem; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--text-muted); margin-top: .4rem;
+  }
+
+  /* ── CATEGORIES ── */
+  .categories-section { background: var(--dark); }
+
+  .cats-header {
+    text-align: center; max-width: 560px; margin: 0 auto 4rem;
+  }
+  .cats-header .section-label { justify-content: center; }
+  .cats-header .section-label::before { display: none; }
+
+  .cats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5px;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .cat-card {
+    position: relative; aspect-ratio: 3/4;
+    overflow: hidden; cursor: pointer;
+    background: var(--dark2);
+    transition: transform .4s;
+  }
+  .cat-card:hover { transform: scale(1.02); z-index: 2; }
+
+  .cat-bg {
+    position: absolute; inset: 0;
+    transition: transform .6s ease;
+  }
+  .cat-card:hover .cat-bg { transform: scale(1.08); }
+
+  .cat-bg-1 { background: url('https://images.unsplash.com/photo-1541643600914-78b084683702?w=600&q=80') center/cover; }
+  .cat-bg-2 { background: url('https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=600&q=80') center/cover; }
+  .cat-bg-3 { background: url('https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=600&q=80') center/cover; }
+  .cat-bg-4 { background: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&q=80') center/cover; }
+
+  .cat-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.35) 50%, rgba(0,0,0,.7) 100%);
+    transition: opacity .4s;
+  }
+  .cat-card:hover .cat-overlay { opacity: .6; }
+
+  .cat-icon {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%);
+    font-size: 3rem; transition: transform .4s;
+  }
+  .cat-card:hover .cat-icon { transform: translate(-50%, -65%) scale(1.1); }
+
+  .cat-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(10,10,10,.95) 0%, transparent 100%);
+  }
+  .cat-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; font-weight: 400; color: var(--white);
+  }
+  .cat-sub {
+    font-size: .6rem; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--gold); margin-top: .3rem;
+  }
+
+  .cat-arrow {
+    position: absolute; top: 1.2rem; right: 1.2rem;
+    width: 32px; height: 32px; border: 1px solid rgba(201,168,76,.3);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: .8rem;
+    opacity: 0; transition: opacity .3s, transform .3s;
+    transform: translateX(-6px);
+  }
+  .cat-card:hover .cat-arrow { opacity: 1; transform: translateX(0); }
+
+  /* ── FEATURED / WHY US ── */
+  .why {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+  }
+
+  .why-list { display: flex; flex-direction: column; gap: 2rem; margin-top: 2rem; }
+
+  .why-item {
+    display: grid; grid-template-columns: 56px 1fr; gap: 1.5rem; align-items: start;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(201,168,76,.1);
+    transition: transform .3s;
+  }
+  .why-item:last-child { border-bottom: none; }
+  .why-item:hover { transform: translateX(6px); }
+
+  .why-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem; font-weight: 300; color: rgba(201,168,76,.25);
+    line-height: 1; text-align: right;
+  }
+
+  .why-title { color: var(--cream); font-size: .9rem; font-weight: 500; letter-spacing: .05em; margin-bottom: .4rem; }
+  .why-desc { color: var(--text-muted); font-size: .82rem; line-height: 1.8; }
+
+  .why-visual {
+    position: relative;
+    background: linear-gradient(135deg, #1a1408, #0f0f08);
+    aspect-ratio: 1;
+    border: 1px solid rgba(201,168,76,.15);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+
+  .why-circles {
+    position: relative; width: 280px; height: 280px;
+  }
+  .wc {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(201,168,76,var(--op));
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    animation: pulse 3s ease-in-out infinite var(--delay);
+  }
+  .wc1 { width:80px; height:80px; --op:.6; --delay:0s; background:rgba(201,168,76,.12); }
+  .wc2 { width:140px; height:140px; --op:.3; --delay:.4s; }
+  .wc3 { width:200px; height:200px; --op:.15; --delay:.8s; }
+  .wc4 { width:260px; height:260px; --op:.08; --delay:1.2s; }
+  @keyframes pulse { 0%,100%{transform:translate(-50%,-50%) scale(1);} 50%{transform:translate(-50%,-50%) scale(1.04);} }
+
+  .wc-center {
+    position: absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    text-align:center;
+  }
+  .wc-center .big { font-family:'Cormorant Garamond',serif; font-size:3rem; color:var(--gold); line-height:1; }
+  .wc-center .sm { font-size:.55rem; letter-spacing:.2em; text-transform:uppercase; color:var(--text-muted); }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-section { background: var(--dark); text-align: center; }
+
+  .test-grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
+    max-width: 1100px; margin: 3.5rem auto 0;
+  }
+
+  .test-card {
+    background: var(--dark2);
+    border: 1px solid rgba(201,168,76,.1);
+    padding: 2.5rem 2rem;
+    text-align: left; position: relative;
+    transition: border-color .3s, transform .3s;
+  }
+  .test-card:hover { border-color: rgba(201,168,76,.35); transform: translateY(-4px); }
+
+  .test-stars { color: var(--gold); font-size: .85rem; letter-spacing: .1em; margin-bottom: 1rem; }
+  .test-text { color: var(--text-muted); font-size: .83rem; line-height: 1.8; font-style: italic; margin-bottom: 1.5rem; }
+  .test-author { color: var(--cream); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 500; }
+  .test-role { color: var(--gold); font-size: .6rem; letter-spacing: .1em; }
+  .test-quote {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem; line-height: 1;
+    color: rgba(201,168,76,.1);
+  }
+
+  /* ── CTA BANNER ── */
+  .cta-banner {
+    margin: 0 4rem 7rem;
+    background: linear-gradient(135deg, #1a1408 0%, #2a2010 50%, #1a1408 100%);
+    border: 1px solid rgba(201,168,76,.25);
+    padding: 5rem 4rem;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-banner::before {
+    content: '';
+    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(201,168,76,.07), transparent);
+  }
+  .cta-banner h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 300;
+    margin-bottom: .8rem; position: relative;
+  }
+  .cta-banner h2 em { color: var(--gold); font-style: italic; }
+  .cta-banner p {
+    color: var(--text-muted); font-size: .85rem; margin-bottom: 2.5rem;
+    position: relative;
+  }
+  .cta-banner .hero-buttons { position: relative; }
+
+  /* ── CONTACT ── */
+  .contact-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem;
+  }
+
+  .contact-info { }
+  .contact-info h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; font-weight: 400; color: var(--cream);
+    letter-spacing: .08em; margin-bottom: .8rem; margin-top: 2rem;
+  }
+  .contact-info h3:first-of-type { margin-top: 2.5rem; }
+  .contact-info p { color: var(--text-muted); font-size: .85rem; line-height: 1.7; }
+  .contact-info a { color: var(--gold); text-decoration: none; }
+  .contact-info a:hover { color: var(--gold-light); }
+
+  .contact-divider {
+    width: 100%; height: 1px; background: rgba(201,168,76,.15); margin: 2rem 0;
+  }
+
+  .social-row { display: flex; gap: 1rem; margin-top: 1rem; }
+  .social-btn {
+    border: 1px solid rgba(201,168,76,.3);
+    color: var(--gold); padding: .6rem 1.2rem;
+    font-size: .62rem; letter-spacing: .15em; text-transform: uppercase;
+    text-decoration: none; transition: background .3s, color .3s;
+  }
+  .social-btn:hover { background: var(--gold); color: var(--black); }
+
+  /* Form */
+  .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  .field-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+  .form-field { display: flex; flex-direction: column; gap: .4rem; }
+  .form-field label {
+    font-size: .58rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .form-field input, .form-field textarea, .form-field select {
+    background: rgba(201,168,76,.04);
+    border: 1px solid rgba(201,168,76,.15);
+    color: var(--cream);
+    font-family: 'Montserrat', sans-serif; font-size: .82rem;
+    padding: .85rem 1rem;
+    transition: border-color .3s;
+    outline: none; resize: none;
+    -webkit-appearance: none;
+  }
+  .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+    border-color: rgba(201,168,76,.5);
+    background: rgba(201,168,76,.07);
+  }
+  .form-field input::placeholder, .form-field textarea::placeholder { color: rgba(136,136,136,.5); }
+  .form-field select option { background: var(--dark2); }
+  .form-field textarea { height: 120px; }
+
+  .submit-btn {
+    background: var(--gold); color: var(--black);
+    font-family: 'Montserrat', sans-serif;
+    font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
+    padding: 1rem; border: none; cursor: pointer;
+    transition: background .3s, transform .2s;
+    align-self: flex-start; min-width: 180px;
+  }
+  .submit-btn:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .form-success {
+    display: none; color: var(--gold);
+    font-size: .78rem; letter-spacing: .1em;
+    border: 1px solid rgba(201,168,76,.3); padding: 1rem;
+    text-align: center;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark);
+    border-top: 1px solid rgba(201,168,76,.15);
+    padding: 4rem;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
+  }
+
+  .footer-brand .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 300; color: var(--gold);
+    display: block; margin-bottom: .6rem;
+  }
+  .footer-brand .logo em { font-style: italic; }
+  .footer-brand .tagline {
+    font-size: .6rem; letter-spacing: .25em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .footer-brand p { color: var(--text-muted); font-size: .8rem; line-height: 1.8; margin-top: 1.2rem; max-width: 260px; }
+
+  .footer-col h4 {
+    font-size: .62rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.4rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .8rem; }
+  .footer-col ul a { color: var(--text-muted); text-decoration: none; font-size: .8rem; transition: color .3s; }
+  .footer-col ul a:hover { color: var(--gold); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(201,168,76,.1);
+    padding: 1.5rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--dark);
+  }
+  .footer-bottom p { color: var(--text-muted); font-size: .68rem; letter-spacing: .08em; }
+  .footer-bottom span { color: var(--gold); }
+
+  /* ── PRODUCT CARDS ── */
+  .prod-card {
+    cursor: pointer;
+    transition: transform .35s;
+  }
+  .prod-card:hover { transform: translateY(-6px); }
+
+  .prod-img-wrap {
+    position: relative; overflow: hidden;
+    aspect-ratio: 3/4;
+    background: var(--dark2);
+  }
+
+  .prod-img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .5s ease;
+  }
+  .prod-card:hover .prod-img { transform: scale(1.07); }
+
+  .prod-badge {
+    position: absolute; top: .8rem; left: .8rem;
+    background: var(--gold); color: var(--black);
+    font-size: .55rem; letter-spacing: .15em; text-transform: uppercase;
+    font-weight: 600; padding: .28rem .7rem;
+  }
+
+  .prod-hover-overlay {
+    position: absolute; inset: 0;
+    background: rgba(10,10,10,.6);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .3s;
+  }
+  .prod-card:hover .prod-hover-overlay { opacity: 1; }
+  .prod-hover-overlay span {
+    border: 1px solid var(--gold); color: var(--gold);
+    font-size: .65rem; letter-spacing: .2em; text-transform: uppercase;
+    padding: .7rem 1.6rem;
+  }
+
+  .prod-info { padding: 1rem 0 .5rem; }
+  .prod-cat {
+    font-size: .58rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: .35rem;
+  }
+  .prod-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem; color: var(--cream); margin-bottom: .4rem;
+  }
+  .prod-price {
+    font-size: .78rem; color: var(--text-muted); font-weight: 500;
+  }
+
+  @media (max-width: 1024px) {
+    #products > div > div:nth-child(2) { grid-template-columns: repeat(2,1fr) !important; }
+  }
+  @media (max-width: 640px) {
+    #products > div > div:nth-child(2) { grid-template-columns: repeat(2,1fr) !important; gap: 1rem !important; }
+  }
+
+  /* ── PRODUCT CARDS ── */
+  @media (max-width: 1024px) {
+    nav { padding: 1rem 2rem; }
+    section { padding: 5rem 2rem; }
+    .about { grid-template-columns: 1fr; gap: 3rem; }
+    .about-visual { aspect-ratio: 16/9; max-height: 320px; }
+    .why { grid-template-columns: 1fr; gap: 3rem; }
+    .cats-grid { grid-template-columns: repeat(2, 1fr); }
+    .test-grid { grid-template-columns: 1fr 1fr; }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    footer { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .footer-bottom { padding: 1.5rem 2rem; }
+    .cta-banner { margin: 0 2rem 5rem; }
+  }
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .cats-grid { grid-template-columns: 1fr 1fr; }
+    .test-grid { grid-template-columns: 1fr; }
+    .field-group { grid-template-columns: 1fr; }
+    footer { grid-template-columns: 1fr; padding: 3rem 1.5rem; }
+    .footer-bottom { flex-direction: column; gap: .5rem; text-align: center; }
+    .cta-banner { margin: 0 1.5rem 4rem; padding: 3rem 1.5rem; }
+  }
+
+  /* mobile menu toggle */
+  .menu-toggle {
+    display: none; background: none; border: none;
+    cursor: pointer; padding: .4rem;
+    flex-direction: column; gap: 5px;
+  }
+  .menu-toggle span {
+    display: block; width: 24px; height: 1px; background: var(--gold);
+  }
+  @media (max-width: 1024px) {
+    .menu-toggle { display: flex; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo"><span>Jul'en</span> Beauty Bliss</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#categories">Shop</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Visit Us</button>
+  <button class="menu-toggle" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-lines"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Premium Beauty Store</p>
+    <h1 class="hero-title"><span>Jul'en</span><br><em>Beauty Bliss</em></h1>
+    <p class="hero-sub">Your Beauty, Our Duty</p>
+    <div class="hero-buttons">
+      <a href="#categories" class="btn-primary">Shop Now</a>
+      <a href="#about" class="btn-outline">Our Story</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <span>Luxury Perfumes</span><span>Premium Skincare</span><span>Makeup & Cosmetics</span>
+    <span>Hair Care</span><span>Body Lotions</span><span>Fragrances</span>
+    <span>Beauty Tools</span><span>Serums & Oils</span>
+    <span>Luxury Perfumes</span><span>Premium Skincare</span><span>Makeup & Cosmetics</span>
+    <span>Hair Care</span><span>Body Lotions</span><span>Fragrances</span>
+    <span>Beauty Tools</span><span>Serums & Oils</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about">
+    <div class="about-visual">
+      <!-- Animated shelf display -->
+      <div class="about-img-mock">
+        <div class="shelf-sim">
+          <!-- Row 1 – perfumes -->
+          <div class="shelf-row" id="s1"></div>
+          <!-- Row 2 – skincare -->
+          <div class="shelf-row" id="s2"></div>
+          <!-- Row 3 – makeup -->
+          <div class="shelf-row" id="s3"></div>
+          <!-- Row 4 – misc -->
+          <div class="shelf-row" id="s4"></div>
+        </div>
+      </div>
+      <div class="about-corner"><span>Est.<br>2024</span></div>
+    </div>
+
+    <div class="about-text">
+      <p class="section-label">Our Story</p>
+      <h2 class="section-title">Where <em>beauty</em><br>meets purpose</h2>
+      <p>Jul'en Beauty Bliss was born from a simple belief — every person deserves access to <strong>world-class beauty products</strong> that celebrate and enhance their natural glow.</p>
+      <p>Our carefully curated collection spans <strong>luxury perfumes, premium skincare, professional makeup, and hair care essentials</strong> — all sourced from trusted brands and meticulously selected for quality.</p>
+      <p>Step into our store and discover a <strong>beauty experience</strong> unlike any other — guided by knowledgeable staff who are passionate about helping you look and feel your absolute best.</p>
+
+      <div class="about-stats">
+        <div>
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Products</div>
+        </div>
+        <div>
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Authentic</div>
+        </div>
+        <div>
+          <div class="stat-num">★ 4.9</div>
+          <div class="stat-label">Customer Rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories" class="categories-section">
+  <div class="cats-header">
+    <p class="section-label">What We Offer</p>
+    <h2 class="section-title">Shop by <em>Category</em></h2>
+  </div>
+
+  <div class="cats-grid">
+    <div class="cat-card">
+      <div class="cat-bg cat-bg-1"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-icon">🌸</div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-info">
+        <div class="cat-name">Perfumes</div>
+        <div class="cat-sub">Luxury Fragrances</div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-bg cat-bg-2"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-icon">✨</div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-info">
+        <div class="cat-name">Skincare</div>
+        <div class="cat-sub">Serums & Treatments</div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-bg cat-bg-3"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-icon">💄</div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-info">
+        <div class="cat-name">Makeup</div>
+        <div class="cat-sub">Cosmetics & Tools</div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-bg cat-bg-4"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-icon">🌿</div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-info">
+        <div class="cat-name">Hair Care</div>
+        <div class="cat-sub">Oils, Treatments & More</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section id="products" style="background:var(--black); padding-top:0;">
+  <div style="max-width:1200px; margin:0 auto;">
+    <div style="text-align:center; margin-bottom:3.5rem;">
+      <p class="section-label" style="justify-content:center;">Hand-Picked For You</p>
+      <h2 class="section-title">Featured <em>Products</em></h2>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem;">
+
+      <!-- Product 1 -->
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <img src="https://images.unsplash.com/photo-1590156546064-8f0e91a62a51?w=400&q=80" alt="Perfume" class="prod-img" />
+          <div class="prod-badge">New</div>
+          <div class="prod-hover-overlay"><span>View Product</span></div>
+        </div>
+        <div class="prod-info">
+          <div class="prod-cat">Perfumes</div>
+          <div class="prod-name">Oud & Amber Noir</div>
+          <div class="prod-price">₦18,500</div>
+        </div>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <img src="https://images.unsplash.com/photo-1556228720-da329b5a5d5c?w=400&q=80" alt="Skincare" class="prod-img" />
+          <div class="prod-badge">Best Seller</div>
+          <div class="prod-hover-overlay"><span>View Product</span></div>
+        </div>
+        <div class="prod-info">
+          <div class="prod-cat">Skincare</div>
+          <div class="prod-name">Glow Serum Complex</div>
+          <div class="prod-price">₦12,000</div>
+        </div>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <img src="https://images.unsplash.com/photo-1631214524020-3c69888e0e3a?w=400&q=80" alt="Lipstick" class="prod-img" />
+          <div class="prod-hover-overlay"><span>View Product</span></div>
+        </div>
+        <div class="prod-info">
+          <div class="prod-cat">Makeup</div>
+          <div class="prod-name">Velvet Matte Lip Set</div>
+          <div class="prod-price">₦7,500</div>
+        </div>
+      </div>
+
+      <!-- Product 4 -->
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <img src="https://images.unsplash.com/photo-1526045612212-70caf35c14df?w=400&q=80" alt="Hair Oil" class="prod-img" />
+          <div class="prod-badge">Sale</div>
+          <div class="prod-hover-overlay"><span>View Product</span></div>
+        </div>
+        <div class="prod-info">
+          <div class="prod-cat">Hair Care</div>
+          <div class="prod-name">Argan Repair Oil</div>
+          <div class="prod-price">₦9,200</div>
+        </div>
+      </div>
+
+      <!-- Product 5 -->
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&q=80" alt="Cream" class="prod-img" />
+          <div class="prod-hover-overlay"><span>View Product</span></div>
+        </div>
+        <div class="prod-info">
+          <div class="prod-cat">Skincare</div>
+          <div class="prod-name">Brightening Body Cream</div>
+          <div class="prod-price">₦8,800</div>
+        </div>
+      </div>
+
+      <!-- Product 6 -->
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <img src="https://images.unsplash.com/photo-1617897903246-719242758050?w=400&q=80" alt="Perfume" class="prod-img" />
+          <div class="prod-badge">Popular</div>
+          <div class="prod-hover-overlay"><span>View Product</span></div>
+        </div>
+        <div class="prod-info">
+          <div class="prod-cat">Perfumes</div>
+          <div class="prod-name">Rose & Musk Elixir</div>
+          <div class="prod-price">₦22,000</div>
+        </div>
+      </div>
+
+      <!-- Product 7 -->
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80" alt="Foundation" class="prod-img" />
+          <div class="prod-hover-overlay"><span>View Product</span></div>
+        </div>
+        <div class="prod-info">
+          <div class="prod-cat">Makeup</div>
+          <div class="prod-name">Full Coverage Foundation</div>
+          <div class="prod-price">₦11,500</div>
+        </div>
+      </div>
+
+      <!-- Product 8 -->
+      <div class="prod-card">
+        <div class="prod-img-wrap">
+          <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&q=80" alt="Palette" class="prod-img" />
+          <div class="prod-badge">New</div>
+          <div class="prod-hover-overlay"><span>View Product</span></div>
+        </div>
+        <div class="prod-info">
+          <div class="prod-cat">Makeup</div>
+          <div class="prod-name">Pro Eyeshadow Palette</div>
+          <div class="prod-price">₦15,000</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:3rem;">
+      <a href="#contact" class="btn-outline">Enquire About Products</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="why">
+    <div>
+      <p class="section-label">Why Choose Us</p>
+      <h2 class="section-title">The <em>beauty</em><br>you deserve</h2>
+
+      <div class="why-list">
+        <div class="why-item">
+          <div class="why-num">01</div>
+          <div>
+            <div class="why-title">100% Authentic Products</div>
+            <div class="why-desc">Every product in our store is sourced directly from verified distributors and trusted brands. No fakes, no compromises — only genuine beauty.</div>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-num">02</div>
+          <div>
+            <div class="why-title">Expert Beauty Consultation</div>
+            <div class="why-desc">Our trained staff are here to guide you to products that truly work for your skin type, tone, and lifestyle.</div>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-num">03</div>
+          <div>
+            <div class="why-title">Wide Product Selection</div>
+            <div class="why-desc">From drugstore favourites to luxury brands, we carry over 500 curated products across skincare, makeup, fragrance, and hair care.</div>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-num">04</div>
+          <div>
+            <div class="why-title">Affordable Luxury</div>
+            <div class="why-desc">Premium beauty doesn't have to break the bank. We offer competitive prices so you can look your best without compromise.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="why-visual">
+      <div class="why-circles">
+        <div class="wc wc4"></div>
+        <div class="wc wc3"></div>
+        <div class="wc wc2"></div>
+        <div class="wc wc1"></div>
+        <div class="wc-center">
+          <div class="big">JB</div>
+          <div class="sm">Beauty<br>Bliss</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <p class="section-label" style="justify-content:center;"><span></span>Customer Love</p>
+  <h2 class="section-title" style="text-align:center;">What our <em>clients</em> say</h2>
+
+  <div class="test-grid">
+    <div class="test-card">
+      <div class="test-quote">"</div>
+      <div class="test-stars">★★★★★</div>
+      <p class="test-text">Jul'en Beauty Bliss is my go-to shop for everything beauty. The products are all authentic and the staff are incredibly knowledgeable. Highly recommend!</p>
+      <div class="test-author">Adaeze O.</div>
+      <div class="test-role">Loyal Customer</div>
+    </div>
+    <div class="test-card">
+      <div class="test-quote">"</div>
+      <div class="test-stars">★★★★★</div>
+      <p class="test-text">I found my holy grail skincare routine here. The consultation they gave me was spot-on, and the store is beautifully organized. Love this place!</p>
+      <div class="test-author">Chioma B.</div>
+      <div class="test-role">Regular Shopper</div>
+    </div>
+    <div class="test-card">
+      <div class="test-quote">"</div>
+      <div class="test-stars">★★★★★</div>
+      <p class="test-text">Best beauty store in Port Harcourt! Great selection of perfumes, makeup and skincare. The prices are very fair for the quality you get. Will keep coming back.</p>
+      <div class="test-author">Fatima A.</div>
+      <div class="test-role">Beauty Enthusiast</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <h2>Ready to <em>glow up?</em></h2>
+  <p>Visit us in-store for a personalized beauty experience you won't forget.</p>
+  <div class="hero-buttons">
+    <a href="#contact" class="btn-primary">Find Us</a>
+    <a href="tel:08187274856" class="btn-outline">Call Us</a>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p class="section-label">Get In Touch</p>
+      <h2 class="section-title">Visit <em>us</em><br>today</h2>
+
+      <div class="contact-divider"></div>
+
+      <h3>📍 Location</h3>
+      <p>Port Harcourt, Rivers State, Nigeria</p>
+
+      <h3>📞 Phone</h3>
+      <p><a href="tel:08187274856">0818 727 4856</a></p>
+
+      <h3>⏰ Opening Hours</h3>
+      <p>Monday – Saturday: 9:00 AM – 7:00 PM<br>Sunday: 11:00 AM – 5:00 PM</p>
+
+      <div class="contact-divider"></div>
+
+      <div class="social-row">
+        <a href="#" class="social-btn">Instagram</a>
+        <a href="#" class="social-btn">WhatsApp</a>
+        <a href="#" class="social-btn">Facebook</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="contact-form" id="contactForm">
+        <div class="field-group">
+          <div class="form-field">
+            <label>First Name</label>
+            <input type="text" placeholder="Your first name" />
+          </div>
+          <div class="form-field">
+            <label>Last Name</label>
+            <input type="text" placeholder="Your last name" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="+234 000 000 0000" />
+        </div>
+        <div class="form-field">
+          <label>Email Address</label>
+          <input type="email" placeholder="your@email.com" />
+        </div>
+        <div class="form-field">
+          <label>I'm interested in</label>
+          <select>
+            <option value="">Select a category</option>
+            <option>Perfumes & Fragrances</option>
+            <option>Skincare</option>
+            <option>Makeup & Cosmetics</option>
+            <option>Hair Care</option>
+            <option>General Enquiry</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Message</label>
+          <textarea placeholder="Tell us how we can help you..."></textarea>
+        </div>
+        <button class="submit-btn" onclick="handleSubmit(event)">Send Message</button>
+        <div class="form-success" id="successMsg">✦ Message sent! We'll be in touch soon.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <span class="logo"><em>Jul'en</em> Beauty Bliss</span>
+    <div class="tagline">Your Beauty, Our Duty</div>
+    <p>Your premier destination for authentic beauty products in Port Harcourt. We are passionate about helping you look and feel your very best.</p>
+  </div>
+
+  <div class="footer-col">
+    <h4>Shop</h4>
+    <ul>
+      <li><a href="#">Perfumes</a></li>
+      <li><a href="#">Skincare</a></li>
+      <li><a href="#">Makeup</a></li>
+      <li><a href="#">Hair Care</a></li>
+      <li><a href="#">Body Care</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-col">
+    <h4>Information</h4>
+    <ul>
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Our Story</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">FAQs</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-col">
+    <h4>Connect</h4>
+    <ul>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">Facebook</a></li>
+      <li><a href="#">WhatsApp</a></li>
+      <li><a href="#">TikTok</a></li>
+    </ul>
+  </div>
+</footer>
+
+<div class="footer-bottom">
+  <p>© 2025 <span>Jul'en Beauty Bliss</span>. All rights reserved.</p>
+  <p>Crafted with <span>♥</span> for beauty lovers</p>
+</div>
+
+<script>
+  // Animated product stubs on shelves
+  const colors = ['#c9a84c','#d4a8b4','#8ab4d4','#a8d4b0','#d4c8a8','#c8a8d4','#d4b8a8','#a8b4c8','#f0d090','#e8a880'];
+  const heights = [24,32,20,28,36,22,30,26,18,34,40,16];
+
+  ['s1','s2','s3','s4'].forEach((id,ri) => {
+    const row = document.getElementById(id);
+    const count = 14 + ri * 2;
+    for(let i=0;i<count;i++){
+      const stub = document.createElement('div');
+      stub.className = 'product-stub';
+      const h = heights[Math.floor(Math.random()*heights.length)];
+      const c = colors[Math.floor(Math.random()*colors.length)];
+      stub.style.cssText = `height:${h}px;background:${c};width:${6+Math.random()*6}px;opacity:${0.4+Math.random()*0.5};animation:fadeUp .6s ${i*0.03}s ease both;`;
+      row.appendChild(stub);
+    }
+  });
+
+  // Form submit handler
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target;
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    }, 1200);
+  }
+
+  // Nav scroll behavior
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.style.background = window.scrollY > 60
+      ? 'rgba(10,10,10,0.97)'
+      : 'rgba(10,10,10,0.85)';
+  });
+
+  // Intersection Observer for subtle entrance
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.cat-card, .why-item, .test-card, .stat-num').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
